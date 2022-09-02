@@ -75,7 +75,12 @@ export default {
           admin_access_token: localStorage.getItem("token")
         }
       });
-      this.$swal("success", "Approved Successfully");
+      if (res.data.success) {
+        this.$swal("success", res.data.message);
+      } else {
+        this.$swal("error", res.data.message);
+      }
+      this.file="";
       this.isLoading = false;
     }
   }

@@ -188,7 +188,13 @@ export const router = new createRouter({
 router.beforeEach((to, from, next) => {
   if (
     to.fullPath === "/dashboard" || to.fullPath === "/user" ||
-    to.fullPath === "/request" || to.fullPath === "/banner"
+    to.fullPath === "/request" || to.fullPath === "/banner" ||
+    to.fullPath === "/verify" || to.fullPath === "/subscription" ||
+    to.fullPath === "/live" || to.fullPath === "/video-ads" ||
+    to.fullPath === "/ads" || to.fullPath === "/setting" ||
+    to.fullPath === "/coin" || to.fullPath === "/bounes/coin" ||
+    to.fullPath === "/approved/bank" ||
+    to.fullPath === "/transaction/history" || to.fullPath === "/tax"
   ) {
     if (!localStorage.getItem("token")) {
       next("/");

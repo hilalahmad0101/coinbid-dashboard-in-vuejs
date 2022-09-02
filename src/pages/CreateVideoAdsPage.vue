@@ -41,7 +41,7 @@
                   />
                 </div>
               </div>
-              <!-- <div class="my-2">
+              <div class="my-2">
                 <label for="package" class="text-md block text-gray-700 font-bold mb-2">Package:</label>
                 <select
                   class="border border-gray-400 rounded-md text-md font-semibold w-full py-2 px-3 outline-green-600 appearance-none"
@@ -58,7 +58,7 @@
                     {{pk.price}} Price
                   </option>
                 </select>
-              </div>-->
+              </div>
               <!-- <div class="my-2">
                 <label
                   for="images"
@@ -108,7 +108,7 @@ export default {
       //   image: "",
       video: "",
       packages: [],
-      //   pack_id: "",
+      pack_id: "",
       video: "",
       show: false,
       isLoading: false
@@ -129,6 +129,7 @@ export default {
       formdata.append("title", this.title);
       formdata.append("coins", this.coins);
       formdata.append("video", this.video);
+      formdata.append("packages", this.pack_id);
 
       this.isLoading = true;
       const res = await axios.post(`${BASE_URL}admin/video/ads`, formdata, {
@@ -147,27 +148,25 @@ export default {
         this.$swal("error", res.data.message);
       }
       this.isLoading = false;
+    },
+    async getPackages() {
+      const res = await (
+        await fetch(`${BASE_URL}admin/package/plan`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            admin_access_token: localStorage.getItem("token")
+          }
+        })
+      ).json();
+      if (res.success) {
+        this.packages = res.packages;
+      }
     }
-    // async getPackages() {
-    //   const res = await (
-    //     await fetch(`${BASE_URL}admin/package/plan`, {
-    //       method: "GET",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         admin_access_token: localStorage.getItem("token")
-    //       }
-    //     })
-    //   ).json();
-    //   if (res.success) {
-    //     this.packages = res.packages;
-    //   }
-    // }
   },
-  components: { Sidebar, Navbar }
-  //   mounted() {
-  //     this.getPackages();
-  //   }
+  components: { Sidebar, Navbar },
+  mounted() {
+    this.getPackages();
+  }
 };
 </script>
-<style >
-</style>

@@ -42,6 +42,7 @@
                     <td class="text-left px-6 py-5">Title</td>
                     <td class="text-left px-6 py-5">Coins</td>
                     <td class="text-left px-6 py-5">Video</td>
+                    <td class="text-left px-6 py-5">Package Name</td>
                     <td class="text-left px-6 py-5">Action</td>
                   </tr>
                 </thead>
@@ -53,6 +54,9 @@
                     <td
                       class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap"
                     >{{ad.coins}}</td>
+                    <td
+                      class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap"
+                    >{{ad.packages === null ? "no package":ad.packages.title}}</td>
 
                     <td class="py-4 px-6 text-sm font-medium text-gray-900 whitespace-nowrap">
                       <video :src="ad.video" controls class="w-10 h-10"></video>

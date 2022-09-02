@@ -41,6 +41,24 @@
               </div>
             </div>
             <div class="my-2">
+              <label for="package" class="text-md block text-gray-700 font-bold mb-2">Package:</label>
+              <select
+                class="border border-gray-400 rounded-md text-md font-semibold w-full py-2 px-3 outline-green-600 appearance-none"
+                v-model="old_package"
+              >
+                <option value disabled selected>Select Packages</option>
+                <option
+                  class="flex justify-between items-center"
+                  v-for="(pk, index) in packages"
+                  :key="index"
+                  :value="pk._id"
+                >
+                  {{pk.title}},
+                  {{pk.price}} Price
+                </option>
+              </select>
+            </div>
+            <div class="my-2">
               <label for="video" class="text-md block text-gray-700 font-bold mb-2">Upload Video:</label>
               <input
                 type="file"
@@ -48,9 +66,15 @@
                 placeholder="Upload Video"
                 @change="onFileChange"
               />
+              <input
+                type="hidden"
+                v-model="a_package"
+                class="border border-gray-400 rounded-md text-md font-semibold w-full py-2 px-3 outline-green-600 appearance-none"
+                placeholder
+              />
             </div>
             <video controls :src="+old_video"></video>
-            <input type="text" v-model="old_video" />
+            <input type="hidden" v-model="old_video" />
             <div class="my-2">
               <button
                 class="border border-gray-400 rounded-md font-bold bg-green-700 text-md text-white w-full py-2 px-6 appearance-none capitalize hover:bg-green-800"
@@ -76,6 +100,10 @@ export default {
       coins: "",
       video: "",
       old_video: "",
+      packages: [],
+      a_package: "",
+      old_package: "",
+      pack_id: "",
       show: false,
       isLoading: false
     };
@@ -101,19 +129,22 @@ export default {
           }
         })
       ).json();
-      console.log(res.video);
       if (res.success) {
         this.title = res.video.title;
         this.coins = res.video.coins;
+        this.old_package = res.video.packages;
+        this.a_package = res.video.packages;
         this.old_video = res.video.video;
       }
     },
     async updateAds() {
       const formdata = new FormData();
       formdata.append("title", this.title);
-      // formdata.append("old_video", this.old_video);
+      formdata.append("old_video", this.old_video);
       formdata.append("coins", this.coins);
       formdata.append("video", this.video);
+      formdata.append("new_package", this.old_package);
+      formdata.append("old_package", this.a_package);
       this.isLoading = true;
       const res = await axios.put(
         `${BASE_URL}admin/video/ads/${this.$route.params.id}`,
@@ -130,15 +161,30 @@ export default {
         this.title = "";
         this.coins = "";
         this.old_video = "";
-        this.$router.push("/ads");
+        this.$router.push("/video-ads");
       } else {
         this.$swal("error", res.data.message);
       }
       this.isLoading = false;
+    },
+    async getPackages() {
+      const res = await (
+        await fetch(`${BASE_URL}admin/package/plan`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            admin_access_token: localStorage.getItem("token")
+          }
+        })
+      ).json();
+      if (res.success) {
+        this.packages = res.packages;
+      }
     }
   },
   components: { Sidebar, Navbar },
   mounted() {
+    this.getPackages();
     this.getData();
   }
 };
